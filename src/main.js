@@ -29,30 +29,32 @@ const onSearchFormSubmit = async event => {
       iziToast.show({ message: `the field must be filled!` });
       return;
     }
+
     page = 1;
     loadMoreBtn.classList.add('is-hidden');
     loader.style.display = 'flex';
+    gallery.innerHTML = '';
+
     const { data } = await fetchPhotoByQuery(searchedQuery, page);
 
     if (data.total === 0) {
       iziToast.show({
         message: `Sorry, there are no images matching your search query. Please try again!`,
       });
-      gallery.innerHTML = '';
       searchForm.reset();
       return;
-    }
-    if (data.total > 1) {
-      loadMoreBtn.classList.remove('is-hidden');
-      loadMoreBtn.removeEventListener('click', onLoadMoreBtnClick);
-      loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
     }
     const galleryTemplate = data.hits.map(el => createGallery(el)).join('');
     gallery.innerHTML = galleryTemplate;
 
-    smoothScroll();
-
     lightbox.refresh();
+
+    if (data.totalHits > 15) {
+      loadMoreBtn.classList.remove('is-hidden');
+    } else {
+      loadMoreBtn.classList.add('is-hidden');
+    }
+    smoothScroll();
   } catch (err) {
     console.log(err);
     iziToast.show({ message: `Something went wrong. Please try again later.` });
@@ -60,8 +62,6 @@ const onSearchFormSubmit = async event => {
     loader.style.display = 'none';
   }
 };
-
-searchForm.addEventListener('submit', onSearchFormSubmit);
 
 const onLoadMoreBtnClick = async event => {
   try {
@@ -87,7 +87,7 @@ const onLoadMoreBtnClick = async event => {
     });
   }
 };
-
+searchForm.addEventListener('submit', onSearchFormSubmit);
 loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
 
 function smoothScroll() {
