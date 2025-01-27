@@ -1,3 +1,6 @@
+.container {
+  text-align: center;
+}
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -53,4 +56,16 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.loadmore-btn {
+  padding: 10px 20px;
+  background-color: #3498dba9;
+  color: black;
+  border: none;
+  margin-left: auto;
+}
+
+.loadmore-btn.is-hidden {
+  display: none;
 }
